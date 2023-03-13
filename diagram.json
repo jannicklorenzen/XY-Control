@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "author": "Jannick Lorenzen",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-nano", "id": "nano", "top": 151.5, "left": 30.17, "attrs": {} },
+    { "type": "wokwi-a4988", "id": "drv1", "top": 8.29, "left": 38.7, "attrs": {} },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper1",
+      "top": -211.65,
+      "left": 107.36,
+      "rotate": 90,
+      "attrs": { "size": "17", "arrow": "orange" }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper2",
+      "top": -206.16,
+      "left": -74.23,
+      "attrs": { "size": "17", "arrow": "orange" }
+    },
+    { "type": "wokwi-a4988", "id": "drv2", "top": 12.55, "left": -81.77, "attrs": {} },
+    {
+      "type": "wokwi-analog-joystick",
+      "id": "joystick1",
+      "top": -29.69,
+      "left": 237.83,
+      "attrs": { "bounce": "0" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": 143.16, "left": -117.94, "attrs": {} },
+    {
+      "type": "wokwi-slide-potentiometer",
+      "id": "pot2",
+      "top": 226.75,
+      "left": -99.08,
+      "attrs": { "travelLength": "30" }
+    }
+  ],
+  "connections": [
+    [ "stepper1:A-", "drv1:2B", "green", [ "h0" ] ],
+    [ "stepper1:A+", "drv1:2A", "green", [ "h0" ] ],
+    [ "stepper1:B+", "drv1:1A", "green", [ "h0" ] ],
+    [ "stepper1:B-", "drv1:1B", "green", [ "h0" ] ],
+    [ "drv1:GND.1", "nano:GND.2", "black", [ "h65.83", "v16.16", "h55.05", "v59.93" ] ],
+    [ "drv1:VDD", "nano:5V", "red", [ "h145.84", "v158.11", "h-59.48" ] ],
+    [ "nano:2", "drv1:DIR", "green", [ "v-47.97", "h-114.61", "v-28.04" ] ],
+    [ "nano:3", "drv1:STEP", "green", [ "v-39.97", "h-112.21", "v-45.64" ] ],
+    [ "drv1:SLEEP", "drv1:RESET", "black", [ "h-13.2", "v-9.6" ] ],
+    [ "nano:4", "drv2:DIR", "green", [ "v-31.09", "h-230.49", "v-40.66" ] ],
+    [ "drv2:STEP", "nano:5", "green", [ "h-39.44", "v58.7", "h233.48" ] ],
+    [ "nano:5V", "drv2:VDD", "red", [ "v13.05", "h-175.53", "v-152.08" ] ],
+    [ "nano:GND.2", "drv2:GND.1", "black", [ "v-9.77", "h-160.43", "v-62.06" ] ],
+    [ "drv2:1B", "stepper2:B-", "green", [ "h0" ] ],
+    [ "drv2:1A", "stepper2:B+", "green", [ "h0" ] ],
+    [ "drv2:2A", "stepper2:A+", "green", [ "h0" ] ],
+    [ "drv2:2B", "stepper2:A-", "green", [ "h0" ] ],
+    [ "drv2:SLEEP", "drv2:RESET", "black", [ "h-14.25", "v-9.6" ] ],
+    [ "joystick1:VCC", "nano:5V", "red", [ "h-43.59", "v-176.88" ] ],
+    [ "joystick1:VERT", "nano:A0", "green", [ "v9.47", "h-131.46", "v-166.93" ] ],
+    [ "joystick1:HORZ", "nano:A1", "green", [ "v17.36", "h-130.74", "v-174.82" ] ],
+    [ "joystick1:GND", "nano:GND.1", "black", [ "h98.22", "v-157.46" ] ],
+    [ "joystick1:SEL", "nano:6", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
