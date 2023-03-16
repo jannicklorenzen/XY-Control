@@ -46,11 +46,18 @@ ISR(ADC_vect) {
   return;
  }
 
+
 void init_adc() {
   ADMUX = (1<<REFS0) | (0<<MUX0);
   ADCSRA = (1<<ADEN) | (1<<ADATE) | (1<<ADIE) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);
   ADCSRB = 0;
   ADCSRA |= (1<<ADSC);
+}
+
+void init_timer(){
+  TCCR0A |= (0<<COM0A1) | (0<<COM0A0) | (0<<COM0B0) | (0<<COM0B1) | (1<<WGM01) | (0<<WGM00); // Prescaler /64 normal mode, CTC
+  OCR0A = 0xF9; // OCR = ((clockfreq/prescaler)*time_in_seconds)-1 
+  TCCR0B |= (0<<CS02) | (1<<CS01) | (1<<CS00) | (0<<WGM02);
 }
 
   int speeds[]={16,8,4,2,1};
@@ -63,6 +70,7 @@ int main(void){
   DDRD &= ~(1 << PD6);
   DDRD = DDRD | (1<<DIR_PINX) | (1<<STEP_PINX) | (1<<DIR_PINY) | (1<<STEP_PINY);   // Set the direction and step pins as outputs
   init_adc();
+  init_timer();
   sei();  // Enable interrupts
 
   while(1){
@@ -78,31 +86,35 @@ int main(void){
     // Control X motor based on joystick X input
     if (joy_x < 300) {
       PORTD = PORTD & ~(1<<DIR_PINX);  // Set direction counterclockwise
-      PORTD = PORTD | (1<<STEP_PINX);
-      delay(delay_time);
+      while( (TIFR0 & (1 << OCF0A) ) == 0){
+        PORTD = PORTD | (1<<STEP_PINX);
+      }
       PORTD = PORTD & ~(1<<STEP_PINX);
-      delay(delay_time);
+      TIFR0 = (1 << OCF0A);
     } else if (joy_x > 550) {
       PORTD = PORTD | (1<<DIR_PINX);  // Set direction clockwise
-      PORTD = PORTD | (1<<STEP_PINX);
-      delay(delay_time);
+      while( (TIFR0 & (1 << OCF0A) ) == 0){
+        PORTD = PORTD | (1<<STEP_PINX);
+      }
       PORTD = PORTD & ~(1<<STEP_PINX);
-      delay(delay_time);
+      TIFR0 = (1 << OCF0A);
     }
 
     // Control Y motor based on joystick Y input
     if (joy_y < 450) {
       PORTD = PORTD & ~(1<<DIR_PINY);  // Set direction counterclockwise
-      PORTD = PORTD | (1<<STEP_PINY);
-      delay(delay_time);
+      while( (TIFR0 & (1 << OCF0A) ) == 0){
+        PORTD = PORTD | (1<<STEP_PINY);
+      }
       PORTD = PORTD & ~(1<<STEP_PINY);
-      delay(delay_time);
+      TIFR0 = (1 << OCF0A);
     } else if (joy_y > 550) {
       PORTD = PORTD | (1<<DIR_PINY);  // Set direction clockwise
-      PORTD = PORTD | (1<<STEP_PINY);
-      delay(delay_time);
+      while( (TIFR0 & (1 << OCF0A) ) == 0){
+        PORTD = PORTD | (1<<STEP_PINY);
+      }
       PORTD = PORTD & ~(1<<STEP_PINY);
-      delay(delay_time);
+      TIFR0 = (1 << OCF0A);
     }
   }
 return 0;
